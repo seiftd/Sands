@@ -185,7 +185,17 @@ export const TRANSLATIONS = {
     EVENT_CARAVAN: "قافلة",
     OASIS_WELL: "البئر",
     ORACLE_LIB: "المكتبة",
-    TAX_WATER: "ضريبة الماء"
+    TAX_WATER: "ضريبة الماء",
+    
+    // Reset / Settings
+    resetGame: "إعادة اللعب",
+    voteResetTitle: "تصويت للإعادة",
+    voteResetMsg: "هل توافق على إعادة تشغيل اللعبة؟",
+    agree: "موافق",
+    decline: "رفض",
+    voteRejected: "تم رفض التصويت",
+    gameResetInfo: "تم إعادة ضبط اللعبة",
+    restart: "إعادة تشغيل"
   },
   en: {
     gameTitle: "Civilization of Sands",
@@ -293,6 +303,16 @@ export const TRANSLATIONS = {
     EVENT_CARAVAN: "Caravan",
     OASIS_WELL: "Old Well",
     ORACLE_LIB: "Library",
-    TAX_WATER: "Water Tax"
+    TAX_WATER: "Water Tax",
+
+    // Reset / Settings
+    resetGame: "Reset Game",
+    voteResetTitle: "Restart Vote",
+    voteResetMsg: "Do you agree to restart the game?",
+    agree: "Agree",
+    decline: "Decline",
+    voteRejected: "Restart Rejected",
+    gameResetInfo: "Game has been reset",
+    restart: "Restart"
   }
 };

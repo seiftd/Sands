@@ -8,7 +8,7 @@ import { getOracleWisdom } from './services/geminiService';
 import { 
     Coins, Droplet, Zap, Hammer, Trophy, Settings, Play, Wind, Tent, Skull, 
     Volume2, VolumeX, ArrowLeft, Check, Users, Cpu, Globe, ShoppingBag, 
-    MessageCircle, BookOpen, Shield, Copy, Send, Lock, Calendar, Star, TrendingUp, Heart, List
+    MessageCircle, BookOpen, Shield, Copy, Send, Lock, Calendar, Star, TrendingUp, Heart, List, RefreshCcw
 } from 'lucide-react';
 
 const App: React.FC = () => {
@@ -119,6 +119,37 @@ const App: React.FC = () => {
             mood: newMood
         };
     }));
+  };
+
+  const handleRestartClick = () => {
+    if (players.length === 0) return; // No active game
+
+    if (gameSettings.gameMode === 'pve') {
+        // Direct reset for PvE
+        startGame(players[0].role); 
+        addToLog(t('gameResetInfo'), 'info');
+        setScreen(GameScreen.PLAYING); // Ensure we go back to board if in settings
+    } else {
+        // Vote for PvP
+        openModal(
+            <div className="text-center p-4">
+                <h3 className="text-xl font-bold mb-4">{t('voteResetTitle')}</h3>
+                <p className="mb-6 text-gray-600">{t('voteResetMsg')}</p>
+                <div className="flex justify-center gap-4">
+                     <button onClick={() => {
+                         startGame(players[0].role);
+                         setScreen(GameScreen.PLAYING);
+                         addToLog(t('gameResetInfo'), 'info');
+                         closeModal();
+                     }} className="bg-green-600 text-white px-6 py-2 rounded-full font-bold">{t('agree')}</button>
+                     <button onClick={() => {
+                         addToLog(t('voteRejected'), 'negative');
+                         closeModal();
+                     }} className="bg-red-600 text-white px-6 py-2 rounded-full font-bold">{t('decline')}</button>
+                </div>
+            </div>
+        );
+    }
   };
 
   // --- GAME LOGIC ---
@@ -256,8 +287,6 @@ const App: React.FC = () => {
             if (nextPos === 0) {
                 const bonus = p.role === CharacterRole.MERCHANT ? 150 : 100;
                 // We update resources here safely
-                // NOTE: We must find the player in the 'prev' array again or reuse logic carefully.
-                // Since this is a map, we return the updated object.
                 return prev.map(pl => {
                     if (pl.id === playerId) {
                         return { 
@@ -272,10 +301,6 @@ const App: React.FC = () => {
             
             return prev.map(pl => pl.id === playerId ? { ...pl, position: nextPos } : pl);
         });
-
-        // Check if passed start to play sound/log (Side Effect)
-        // Accessing state here is stale, but logic is deterministic.
-        // We can just check visually or assume success.
         
         stepsLeft--;
         if (stepsLeft > 0) {
@@ -284,9 +309,6 @@ const App: React.FC = () => {
         } else {
              // Movement Done
              setIsRolling(false);
-             // We need to resolve the Tile Event based on the FINAL position.
-             // We can calculate it or verify from state (tricky with closures).
-             // Safer to calculate:
              setPlayers(currentPlayers => {
                  const p = currentPlayers.find(pl => pl.id === playerId)!;
                  // Delay slightly to let render catch up
@@ -430,8 +452,8 @@ const App: React.FC = () => {
   );
 
   const renderBoard = () => (
-    <div className="min-h-screen flex flex-col items-center p-2 md:p-4 max-w-4xl mx-auto pb-32">
-        <header className="w-full flex justify-between items-center mb-4 bg-white p-3 rounded-xl shadow-sm border-b-4 border-amber-300">
+    <div className="min-h-screen flex flex-col items-center p-2 md:p-4 max-w-4xl mx-auto pb-32 relative">
+        <header className="w-full flex justify-between items-center mb-4 bg-white p-3 rounded-xl shadow-sm border-b-4 border-amber-300 relative z-40">
             <div>
                 <h1 className="text-lg md:text-xl font-extrabold text-amber-800">{t('gameTitle')}</h1>
                 <p className="text-[10px] text-gray-500">{t('targetGold')}: {gameSettings.winningGold}</p>
@@ -456,13 +478,13 @@ const App: React.FC = () => {
             ))}
         </main>
         
-        {/* LOG UI */}
-        <div className={`fixed left-4 bottom-24 z-30 transition-all ${showLog ? 'w-64' : 'w-12'}`}>
+        {/* LOG UI - Moved to Top Left under Header */}
+        <div className={`fixed rtl:right-4 ltr:left-4 top-20 z-30 transition-all ${showLog ? 'w-64' : 'w-10'}`}>
             {showLog && (
-                <div className="bg-white/95 backdrop-blur rounded-t-lg shadow-xl border border-gray-200 overflow-hidden h-48 flex flex-col">
-                     <div className="bg-gray-100 p-2 text-xs font-bold flex justify-between">
+                <div className="bg-white/95 backdrop-blur rounded-xl shadow-xl border border-gray-200 overflow-hidden h-48 flex flex-col animate-in fade-in zoom-in duration-200">
+                     <div className="bg-amber-100 p-2 text-xs font-bold flex justify-between items-center text-amber-900">
                          <span>{t('gameLog')}</span>
-                         <button onClick={() => setShowLog(false)}>✕</button>
+                         <button onClick={() => setShowLog(false)} className="hover:bg-amber-200 rounded px-1">✕</button>
                      </div>
                      <div ref={logContainerRef} className="flex-1 overflow-y-auto p-2 space-y-1 text-[10px]">
                          {gameLog.map(log => (
@@ -475,7 +497,7 @@ const App: React.FC = () => {
             )}
             <button 
                 onClick={() => setShowLog(!showLog)}
-                className="bg-gray-800 text-white w-10 h-10 rounded-full flex items-center justify-center shadow-lg hover:scale-105 transition"
+                className="bg-amber-600 text-white w-10 h-10 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition border-2 border-white"
             >
                 <List size={18} />
             </button>
@@ -794,8 +816,17 @@ const App: React.FC = () => {
                       <label className="block text-gray-700 font-bold mb-3 flex items-center gap-2">{gameSettings.soundEnabled ? <Volume2 size={18} className="text-blue-500"/> : <VolumeX size={18} className="text-gray-400"/>}{t('sound')}</label>
                       <button onClick={() => setGameSettings(s => ({ ...s, soundEnabled: !s.soundEnabled }))} className={`w-14 h-8 rounded-full p-1 transition-colors duration-300 ${gameSettings.soundEnabled ? 'bg-green-500' : 'bg-gray-300'}`}><div className={`bg-white w-6 h-6 rounded-full shadow-md transform transition-transform duration-300 ${gameSettings.soundEnabled ? 'translate-x-6' : 'translate-x-0'}`} /></button>
                   </div>
+                  
+                  {/* RESTART GAME BUTTON (Only if game is active) */}
+                  {players.length > 0 && (
+                      <div className="border-t pt-4">
+                           <button onClick={handleRestartClick} className="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 shadow-md">
+                               <RefreshCcw size={18} /> {t('resetGame')}
+                           </button>
+                      </div>
+                  )}
               </div>
-              <div className="p-4 bg-gray-50 border-t border-gray-100"><button onClick={() => setScreen(GameScreen.HOME)} className="w-full bg-gray-800 hover:bg-gray-900 text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2"><ArrowLeft size={18} /> {t('saveReturn')}</button></div>
+              <div className="p-4 bg-gray-50 border-t border-gray-100"><button onClick={() => setScreen(players.length > 0 ? GameScreen.PLAYING : GameScreen.HOME)} className="w-full bg-gray-800 hover:bg-gray-900 text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2"><ArrowLeft size={18} /> {t('saveReturn')}</button></div>
           </div>
       </div>
   );

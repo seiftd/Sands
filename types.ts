@@ -5,7 +5,9 @@ export enum TileType {
   TAX = 'TAX',
   JAIL = 'JAIL',
   ORACLE = 'ORACLE', // AI Powered tile
-  OASIS = 'OASIS'
+  OASIS = 'OASIS',
+  SWAMP = 'SWAMP',
+  TREASURE = 'TREASURE'
 }
 
 export enum CharacterState {

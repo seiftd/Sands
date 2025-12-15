@@ -1,10 +1,10 @@
 import { Tile, TileType, CharacterConfig, CharacterRole, ShopItem } from './types';
 
-export const BOARD_SIZE = 20;
-export const WINNING_GOLD = 2500;
+export const BOARD_SIZE = 32;
+export const WINNING_GOLD = 4000; // Increased due to larger board
 
 export const INITIAL_RESOURCES = {
-  gold: 500,
+  gold: 800, // Slightly increased starting gold
   water: 100,
   energy: 50,
   materials: 20
@@ -15,14 +15,14 @@ export const CHARACTERS_CONFIG: CharacterConfig[] = [
     id: CharacterRole.BUILDER, 
     name: { ar: 'المقاول', en: 'The Builder' }, 
     desc: { ar: 'خبير في البناء والتطوير', en: 'Expert in construction and upgrades' }, 
-    bonus: { ar: 'خصم 20% على الشراء والتطوير', en: '20% Discount on Buy/Upgrade' },
+    bonus: { ar: 'خصم 30% على التطوير', en: '30% Discount on Upgrades' },
     color: 'bg-orange-600'
   },
   { 
     id: CharacterRole.EXPLORER, 
     name: { ar: 'المستكشف', en: 'The Explorer' }, 
     desc: { ar: 'يعشق المغامرة والمجهول', en: 'Loves adventure and the unknown' }, 
-    bonus: { ar: '+50% موارد من الواحات والأحداث', en: '+50% Resources from Oasis/Events' },
+    bonus: { ar: 'لا يتأثر بالمستنقعات', en: 'Immune to Swamps' },
     color: 'bg-green-600' 
   },
   { 
@@ -36,7 +36,7 @@ export const CHARACTERS_CONFIG: CharacterConfig[] = [
     id: CharacterRole.POLITICIAN, 
     name: { ar: 'السياسي', en: 'The Politician' }, 
     desc: { ar: 'ذو نفوذ وعلاقات', en: 'Influential and connected' }, 
-    bonus: { ar: 'حصانة 50% من الضرائب', en: '50% Tax Immunity' },
+    bonus: { ar: 'يربح دائماً في المبارزات', en: 'Always wins Duels' },
     color: 'bg-red-600' 
   }
 ];
@@ -51,9 +51,9 @@ export const SHOP_ITEMS: ShopItem[] = [
 export const INITIAL_BOARD: Tile[] = [
   { id: 0, type: TileType.START, name: 'START', description: 'Collect Salary' },
   { id: 1, type: TileType.CITY, name: 'Damascus', price: 100, rent: 20, level: 1 },
-  { id: 2, type: TileType.EVENT, name: 'EVENT_STORM', description: 'Event' },
+  { id: 2, type: TileType.SWAMP, name: 'SWAMP_QUICKSAND', description: 'Stuck' },
   { id: 3, type: TileType.CITY, name: 'Baghdad', price: 120, rent: 25, level: 1 },
-  { id: 4, type: TileType.OASIS, name: 'OASIS_PALM', description: 'Gain Water' },
+  { id: 4, type: TileType.CITY, name: 'Sanaa', price: 110, rent: 22, level: 1 },
   { id: 5, type: TileType.CITY, name: 'Cairo', price: 150, rent: 30, level: 1 },
   { id: 6, type: TileType.TAX, name: 'TAX_SULTAN', description: 'Pay Gold' },
   { id: 7, type: TileType.CITY, name: 'Alexandria', price: 140, rent: 28, level: 1 },
@@ -61,14 +61,27 @@ export const INITIAL_BOARD: Tile[] = [
   { id: 9, type: TileType.CITY, name: 'Riyadh', price: 160, rent: 35, level: 1 },
   { id: 10, type: TileType.JAIL, name: 'JAIL', description: 'Skip Turn' },
   { id: 11, type: TileType.CITY, name: 'Dubai', price: 200, rent: 50, level: 1 },
-  { id: 12, type: TileType.EVENT, name: 'EVENT_CARAVAN', description: 'Trade' },
+  { id: 12, type: TileType.SWAMP, name: 'SWAMP_MIRAGE', description: 'Lost' },
   { id: 13, type: TileType.CITY, name: 'Doha', price: 180, rent: 40, level: 1 },
-  { id: 14, type: TileType.OASIS, name: 'OASIS_WELL', description: 'Refill Energy' },
+  { id: 14, type: TileType.CITY, name: 'Kuwait', price: 170, rent: 38, level: 1 },
   { id: 15, type: TileType.CITY, name: 'Muscat', price: 130, rent: 26, level: 1 },
   { id: 16, type: TileType.ORACLE, name: 'ORACLE_LIB', description: 'Seek Knowledge' },
   { id: 17, type: TileType.CITY, name: 'Petra', price: 150, rent: 30, level: 1 },
-  { id: 18, type: TileType.TAX, name: 'TAX_WATER', description: 'Lose Water' },
-  { id: 19, type: TileType.CITY, name: 'Mecca', price: 250, rent: 60, level: 1 }
+  { id: 18, type: TileType.CITY, name: 'Beirut', price: 140, rent: 28, level: 1 },
+  { id: 19, type: TileType.CITY, name: 'Mecca', price: 300, rent: 70, level: 1 },
+  // --- New 32-Tile Content ---
+  { id: 20, type: TileType.CITY, name: 'Jerusalem', price: 220, rent: 55, level: 1 },
+  { id: 21, type: TileType.TREASURE, name: 'TREASURE_CAVE', description: 'Hidden Loot' },
+  { id: 22, type: TileType.CITY, name: 'Casablanca', price: 190, rent: 45, level: 1 },
+  { id: 23, type: TileType.CITY, name: 'Rabat', price: 180, rent: 42, level: 1 },
+  { id: 24, type: TileType.SWAMP, name: 'SWAMP_SANDSTORM', description: 'Delays' },
+  { id: 25, type: TileType.CITY, name: 'Tunis', price: 160, rent: 35, level: 1 },
+  { id: 26, type: TileType.TAX, name: 'TAX_GUILD', description: 'Merchant Tax' },
+  { id: 27, type: TileType.CITY, name: 'Algiers', price: 170, rent: 38, level: 1 },
+  { id: 28, type: TileType.CITY, name: 'Manama', price: 180, rent: 40, level: 1 },
+  { id: 29, type: TileType.CITY, name: 'Granada', price: 250, rent: 60, level: 1 },
+  { id: 30, type: TileType.CITY, name: 'Cordoba', price: 240, rent: 58, level: 1 },
+  { id: 31, type: TileType.SWAMP, name: 'SWAMP_EMPTY_QUARTER', description: 'Dangerous' },
 ];
 
 export const TRANSLATIONS = {
@@ -85,6 +98,16 @@ export const TRANSLATIONS = {
     settings: "الإعدادات",
     gameLog: "سجل اللعبة",
     
+    // Actions
+    upgrade: "تطوير المبنى",
+    upgradeCost: "تكلفة التطوير",
+    level: "مستوى",
+    duel: "مبارزة",
+    duelWon: "فاز بالمبارزة!",
+    duelLost: "خسر المبارزة",
+    stuckSwamp: "عالق في المستنقع",
+    swampEffect: "خسرت الحركة في الدور القادم!",
+
     // Alliance
     createAlliance: "إنشاء تحالف",
     joinAlliance: "انضم لتحالف",
@@ -93,11 +116,9 @@ export const TRANSLATIONS = {
     donate: "تبرع",
     treasury: "الخزينة",
     members: "الأعضاء",
-    level: "المستوى",
     technology: "التكنولوجيا",
     techTrade: "طرق التجارة",
     techDefense: "التحصينات",
-    upgrade: "ترقية",
     allianceEvents: "أحداث التحالف",
     mission1: "السيطرة على 5 مدن",
     mission2: "جمع 10,000 ذهب",
@@ -109,14 +130,6 @@ export const TRANSLATIONS = {
     modeLocalPvP: "لاعب ضد لاعب (جهاز واحد)",
     modeOnlinePvP: "ضد صديق (اونلاين)",
     
-    // Online
-    createRoom: "إنشاء غرفة",
-    joinRoom: "انضمام لغرفة",
-    enterCode: "أدخل كود الغرفة",
-    waitingForPlayer: "بانتظار اللاعب...",
-    roomCode: "كود الغرفة:",
-    shareCode: "شارك هذا الكود مع صديقك",
-    
     // Shop
     shopTitle: "سوق المدينة",
     skins: "الأزياء",
@@ -126,35 +139,20 @@ export const TRANSLATIONS = {
     equip: "تجهيز",
     equipped: "مجهز",
     
-    // Social
-    chat: "الدردشة",
-    globalChat: "الدردشة العامة",
-    
-    // Guide
-    howToPlay: "كيفية اللعب",
-    rule1: "ارمي النرد وتحرك عبر المدن.",
-    rule2: "اشترِ المدن التي تقف عليها لتحصيل الإيجار.",
-    rule3: "احذر من العواصف والضرائب!",
-    rule4: "استخدم قدرات شخصيتك للفوز.",
-    
     // General
     back: "عودة",
     start: "ابدأ",
     language: "اللغة",
     targetGold: "هدف الذهب",
     sound: "الصوت",
-    saveReturn: "حفظ وعودة",
     chooseLeader: "اختر قائدك",
     turn: "دور",
     status: "الحالة",
-    rollDice: "ارمي النرد",
     pass: "تخطى",
     payRent: "دفع إيجار",
-    taxPaid: "تم دفع الضريبة",
     jailMsg: "في السجن!",
     freeMsg: "حر طليق!",
     win: "نصر!",
-    lost: "إفلاس",
     playAgain: "العب مجدداً",
     finalStats: "الإحصائيات النهائية",
     properties: "الممتلكات",
@@ -162,31 +160,48 @@ export const TRANSLATIONS = {
     water: "ماء",
     energy: "طاقة",
     materials: "مواد",
-    eventStorm: "عاصفة رملية",
-    eventCaravan: "قافلة تجارية",
-    eventMirage: "سراب",
-    eventTreasure: "كنز",
     oracleSpeaks: "الحكيم يتحدث",
     acceptFate: "اقبل المصير",
-    buyWater: "شراء ماء",
-    buyMat: "شراء مواد",
-    guideCaravan: "إرشاد القافلة",
-    dismiss: "صرف",
-    cost: "التكلفة",
-    rent: "الإيجار",
-    startBonus: "مكافأة البداية",
     rolled: "رمى",
+    treasureFound: "كنز!",
+    treasureMsg: "وجدت كنزاً مخفياً!",
+    
+    // Map
     START: "البداية",
-    EVENT_STORM: "عاصفة",
-    OASIS_PALM: "واحة النخيل",
+    SWAMP_QUICKSAND: "الرمال المتحركة",
+    SWAMP_MIRAGE: "وادي السراب",
+    SWAMP_SANDSTORM: "عاصفة رملية",
+    SWAMP_EMPTY_QUARTER: "الربع الخالي",
     TAX_SULTAN: "ضريبة السلطان",
+    TAX_GUILD: "نقابة التجار",
     ORACLE_SAGE: "الحكيم",
     JAIL: "السجن",
-    EVENT_CARAVAN: "قافلة",
-    OASIS_WELL: "البئر",
     ORACLE_LIB: "المكتبة",
-    TAX_WATER: "ضريبة الماء",
-    
+    TREASURE_CAVE: "كهف العجائب",
+
+    // Cities
+    Jerusalem: "القدس",
+    Casablanca: "الدار البيضاء",
+    Rabat: "الرباط",
+    Tunis: "تونس",
+    Algiers: "الجزائر",
+    Manama: "المنامة",
+    Granada: "غرناطة",
+    Cordoba: "قرطبة",
+    Damascus: "دمشق",
+    Baghdad: "بغداد",
+    Sanaa: "صنعاء",
+    Cairo: "القاهرة",
+    Alexandria: "الإسكندرية",
+    Riyadh: "الرياض",
+    Dubai: "دبي",
+    Doha: "الدوحة",
+    Kuwait: "الكويت",
+    Muscat: "مسقط",
+    Petra: "البتراء",
+    Beirut: "بيروت",
+    Mecca: "مكة",
+
     // Reset / Settings
     resetGame: "إعادة اللعب",
     voteResetTitle: "تصويت للإعادة",
@@ -195,7 +210,6 @@ export const TRANSLATIONS = {
     decline: "رفض",
     voteRejected: "تم رفض التصويت",
     gameResetInfo: "تم إعادة ضبط اللعبة",
-    restart: "إعادة تشغيل"
   },
   en: {
     gameTitle: "Civilization of Sands",
@@ -210,6 +224,15 @@ export const TRANSLATIONS = {
     settings: "Settings",
     gameLog: "Game Log",
 
+    upgrade: "Upgrade Building",
+    upgradeCost: "Upgrade Cost",
+    level: "Level",
+    duel: "Duel",
+    duelWon: "Won the Duel!",
+    duelLost: "Lost the Duel",
+    stuckSwamp: "Stuck in Swamp",
+    swampEffect: "Movement reduced next turn!",
+
     createAlliance: "Create Alliance",
     joinAlliance: "Join Alliance",
     allianceName: "Alliance Name",
@@ -217,11 +240,9 @@ export const TRANSLATIONS = {
     donate: "Donate",
     treasury: "Treasury",
     members: "Members",
-    level: "Level",
     technology: "Technology",
     techTrade: "Trade Routes",
     techDefense: "Fortifications",
-    upgrade: "Upgrade",
     allianceEvents: "Alliance Events",
     mission1: "Control 5 Cities",
     mission2: "Collect 10,000 Gold",
@@ -232,13 +253,6 @@ export const TRANSLATIONS = {
     modeLocalPvP: "Vs Player (Local)",
     modeOnlinePvP: "Vs Friend (Online)",
 
-    createRoom: "Create Room",
-    joinRoom: "Join Room",
-    enterCode: "Enter Room Code",
-    waitingForPlayer: "Waiting for player...",
-    roomCode: "Room Code:",
-    shareCode: "Share this code with a friend",
-
     shopTitle: "City Market",
     skins: "Skins",
     maps: "Maps",
@@ -247,32 +261,19 @@ export const TRANSLATIONS = {
     equip: "Equip",
     equipped: "Equipped",
 
-    chat: "Chat",
-    globalChat: "Global Chat",
-
-    howToPlay: "How to Play",
-    rule1: "Roll dice to move across cities.",
-    rule2: "Buy cities to collect rent.",
-    rule3: "Watch out for storms and taxes!",
-    rule4: "Use your character ability to win.",
-
     back: "Back",
     start: "Start",
     language: "Language",
     targetGold: "Winning Gold Target",
     sound: "Sound Effects",
-    saveReturn: "Save & Return",
     chooseLeader: "Choose Your Leader",
     turn: "TURN",
     status: "STATUS",
-    rollDice: "ROLL DICE",
     pass: "Pass",
     payRent: "Pay Rent",
-    taxPaid: "Tax Paid",
     jailMsg: "In Jail!",
     freeMsg: "Is Free!",
     win: "VICTORY!",
-    lost: "BANKRUPT",
     playAgain: "Play Again",
     finalStats: "Final Stats",
     properties: "Properties",
@@ -280,32 +281,46 @@ export const TRANSLATIONS = {
     water: "Water",
     energy: "Energy",
     materials: "Materials",
-    eventStorm: "Sandstorm",
-    eventCaravan: "Merchant Caravan",
-    eventMirage: "Mirage",
-    eventTreasure: "Treasure",
     oracleSpeaks: "The Oracle Speaks",
     acceptFate: "Accept Fate",
-    buyWater: "Buy Water",
-    buyMat: "Buy Materials",
-    guideCaravan: "Guide Caravan",
-    dismiss: "Dismiss",
-    cost: "Cost",
-    rent: "Rent",
-    startBonus: "Start Bonus",
     rolled: "rolled",
+    treasureFound: "Treasure Found!",
+    treasureMsg: "You found hidden loot!",
+
     START: "Start",
-    EVENT_STORM: "Storm",
-    OASIS_PALM: "Palm Oasis",
+    SWAMP_QUICKSAND: "Quicksand",
+    SWAMP_MIRAGE: "Mirage Valley",
+    SWAMP_SANDSTORM: "Sandstorm",
+    SWAMP_EMPTY_QUARTER: "The Empty Quarter",
     TAX_SULTAN: "Sultan's Tax",
+    TAX_GUILD: "Merchant Guild",
     ORACLE_SAGE: "The Sage",
     JAIL: "Dungeon",
-    EVENT_CARAVAN: "Caravan",
-    OASIS_WELL: "Old Well",
     ORACLE_LIB: "Library",
-    TAX_WATER: "Water Tax",
+    TREASURE_CAVE: "Cave of Wonders",
 
-    // Reset / Settings
+    Jerusalem: "Jerusalem",
+    Casablanca: "Casablanca",
+    Rabat: "Rabat",
+    Tunis: "Tunis",
+    Algiers: "Algiers",
+    Manama: "Manama",
+    Granada: "Granada",
+    Cordoba: "Cordoba",
+    Damascus: "Damascus",
+    Baghdad: "Baghdad",
+    Sanaa: "Sanaa",
+    Cairo: "Cairo",
+    Alexandria: "Alexandria",
+    Riyadh: "Riyadh",
+    Dubai: "Dubai",
+    Doha: "Doha",
+    Kuwait: "Kuwait",
+    Muscat: "Muscat",
+    Petra: "Petra",
+    Beirut: "Beirut",
+    Mecca: "Mecca",
+
     resetGame: "Reset Game",
     voteResetTitle: "Restart Vote",
     voteResetMsg: "Do you agree to restart the game?",
@@ -313,6 +328,5 @@ export const TRANSLATIONS = {
     decline: "Decline",
     voteRejected: "Restart Rejected",
     gameResetInfo: "Game has been reset",
-    restart: "Restart"
   }
 };
